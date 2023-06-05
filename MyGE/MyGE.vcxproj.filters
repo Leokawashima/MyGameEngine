@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="MyGameEngine">
+      <UniqueIdentifier>{ab9c0e03-b920-4a4f-bc9b-78301f6370c2}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="MyGameEngine.cpp">
+      <Filter>MyGameEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="WinMain.cpp">
+      <Filter>MyGameEngine</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="MyGameEngine.h">
+      <Filter>MyGameEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="WinMain.h">
+      <Filter>MyGameEngine</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
