@@ -10,8 +10,8 @@ LRESULT CALLBACK WndProc(
 
 HWND MyProgram_CreateWindow(
 	const HINSTANCE inst_,
-	const MyPG::MyGameEngine::WindowState* winState_,
-	const MyPG::MyGameEngine::ScreenState* screenState_,
+	const MyGE::MyGameEngine::WindowState* winState_,
+	const MyGE::MyGameEngine::ScreenState* screenState_,
 	const LPRECT rect_,
 	const int showCmd_
 );

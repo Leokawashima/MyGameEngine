@@ -1,8 +1,7 @@
 #pragma once
 #include <windows.h>
-#include <memory>
 
-namespace MyPG
+namespace MyGE
 {
 	class MyGameEngine
 	{
@@ -48,4 +47,4 @@ namespace MyPG
 	};
 }
 
-extern MyPG::MyGameEngine* GE;
+extern MyGE::MyGameEngine* GE;

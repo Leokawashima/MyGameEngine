@@ -1,25 +1,13 @@
-#include "MyGameEngine.h"
+#include "MyWindowPalette.h"
+using namespace MyWP;
 
 // ゲームエンジンのポインタ(インスタンスを受け渡すとデカいので)
 // スマートポインタでも良かったが正直WinMain内でnewして終了時にdeleteするだけのポインタで
-// 結構な回数アクセスされるのにわざわざオーバーヘッドを増やす気が起きなかった
-MyPG::MyGameEngine* GE;
-
-enum MyWindowStyle
-{
-	FullScreen,
-	Window,
-	Window_BorderLess,
-	Count//要素数カウンタ　この後ろには追加しないこと
-};
-DWORD WindowStyleTable[MyWindowStyle::Count]{
-	WS_POPUP,
-	(WS_CAPTION | WS_SYSMENU | WS_SIZEBOX),
-	WS_POPUP,
-};
+// 結構な回数アクセスされるのにわざわざオーバーヘッドを増やす必要はない
+MyGE::MyGameEngine* GE;
 
 // エンジンのコンストラクタ(初期化処理)
-MyPG::MyGameEngine::MyGameEngine(const HINSTANCE& inst_)
+MyGE::MyGameEngine::MyGameEngine(const HINSTANCE& inst_)
 {
 	//ウィンドウの設定情報
 	this->windowState.TaskName = "MyGameEngine_ProtoType";
@@ -46,7 +34,7 @@ MyPG::MyGameEngine::MyGameEngine(const HINSTANCE& inst_)
 	this->screenState.MultiSample = 1;
 	this->screenState.FullScreenMode = false;
 	this->screenState.BackGroundColor = CreateSolidBrush(RGB(0xFF, 0xFF, 0x00));
-	this->screenState.WindowStyle = WindowStyleTable[MyWindowStyle::Window];
+	this->screenState.WindowStyle = MyWS::WindowStyleTable[MyWS::MyWindowStyle::Window];
 
 	RECT dtr;
 	if (GetWindowRect(GetDesktopWindow(), &dtr)) {
@@ -56,12 +44,12 @@ MyPG::MyGameEngine::MyGameEngine(const HINSTANCE& inst_)
 }
 
 // エンジンのデコンストラクタ(廃棄時処理)
-MyPG::MyGameEngine::~MyGameEngine()
+MyGE::MyGameEngine::~MyGameEngine()
 {
-	DeleteObject(this->screenState.BackGroundColor);
+	//DeleteObject(this->screenState.BackGroundColor);
 }
 
-void MyPG::MyGameEngine::Step(HWND wnd_)
+void MyGE::MyGameEngine::Step(HWND wnd_)
 {
 	static int cnt = 0;
 	HDC hdc = GetDC(wnd_);

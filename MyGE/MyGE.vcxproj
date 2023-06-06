@@ -24,6 +24,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MyGameEngine.h" />
+    <ClInclude Include="MyWindowPalette.h" />
     <ClInclude Include="WinMain.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

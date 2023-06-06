@@ -20,5 +20,8 @@
     <ClInclude Include="WinMain.h">
       <Filter>MyGameEngine</Filter>
     </ClInclude>
+    <ClInclude Include="MyWindowPalette.h">
+      <Filter>MyGameEngine</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

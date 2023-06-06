@@ -24,7 +24,7 @@ int __stdcall WinMain(
 	//宣言だけで中身がないのでnewでインスタンス生成(Unityと同じ)
 	//javaやC#のようなガベージコレクション(自動メモリ制御)がないが疑似機能としてスマートポインタがあるのでそれでもいい
 	//今回はWinMainの最初と最後だけ生成されると決まっているので余分なオーバーヘッドを重むのが嫌なので標準ポインタ
-	GE = new MyPG::MyGameEngine(instance_);
+	GE = new MyGE::MyGameEngine(instance_);
 
 	//ウィンドウ生成の矩形設定　MyGameEngine.cppのコンストラクタで設定することを推奨
 	RECT ws = {
@@ -79,8 +79,8 @@ int __stdcall WinMain(
 // CreateWindow関数で引数の変数を変更することはまずないが読み取り専用である事を明示している
 HWND MyProgram_CreateWindow(
 	const HINSTANCE inst_,
-	const MyPG::MyGameEngine::WindowState* winState_,
-	const MyPG::MyGameEngine::ScreenState* screenState_,
+	const MyGE::MyGameEngine::WindowState* winState_,
+	const MyGE::MyGameEngine::ScreenState* screenState_,
 	const LPRECT rect_,
 	const int showCmd_)
 {
