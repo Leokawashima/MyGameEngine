@@ -46,7 +46,7 @@ MyPG::MyGameEngine::MyGameEngine(const HINSTANCE& inst_)
 	this->screenState.MultiSample = 1;
 	this->screenState.FullScreenMode = false;
 	this->screenState.BackGroundColor = CreateSolidBrush(RGB(0xFF, 0xFF, 0x00));
-	this->screenState.WindowStyle = WindowStyleTable[MyWindowStyle::FullScreen];
+	this->screenState.WindowStyle = WindowStyleTable[MyWindowStyle::Window];
 
 	RECT dtr;
 	if (GetWindowRect(GetDesktopWindow(), &dtr)) {
