@@ -73,5 +73,25 @@ namespace MyWP
 			Person,
 			Count//要素数カウンタ　この後ろには追加しないこと
 		};
-	}	
+		LPSTR WindowCursorTable[MyWindowCursor::Count]{
+			IDC_ARROW,
+			IDC_IBEAM,
+			IDC_WAIT,
+			IDC_CROSS,
+			IDC_UPARROW,
+			IDC_SIZE,
+			IDC_ICON,
+			IDC_SIZENWSE,
+			IDC_SIZENESW,
+			IDC_SIZEWE,
+			IDC_SIZENS,
+			IDC_SIZEALL,
+			IDC_NO,
+			IDC_HAND,
+			IDC_APPSTARTING,
+			IDC_HELP,
+			IDC_PIN,
+			IDC_PERSON
+		};
+	}
 }

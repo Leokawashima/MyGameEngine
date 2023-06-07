@@ -16,9 +16,9 @@ MyGE::MyGameEngine::MyGameEngine(const HINSTANCE& inst_)
 	this->windowState.Style = (CS_HREDRAW | CS_VREDRAW);
 	this->windowState.CbClsExtra = 0;
 	this->windowState.CbWndExtra = 0;
-	this->windowState.HIcon = LoadIcon(inst_, IDI_APPLICATION);
-	this->windowState.HIconSm = LoadIcon(inst_, IDI_APPLICATION);
-	this->windowState.HCursor = LoadCursor(nullptr, IDC_ARROW);
+	this->windowState.HIcon = LoadIcon(inst_, MyWI::WindowIconTable[MyWI::Application]);
+	this->windowState.HIconSm = LoadIcon(inst_, MyWI::WindowIconTable[MyWI::Application]);
+	this->windowState.HCursor = LoadCursor(nullptr, MyWC::WindowCursorTable[MyWC::Arrow]);
 
 	//ウィンドウの描画情報
 	this->screenState.StartPosX = 0;
@@ -34,7 +34,7 @@ MyGE::MyGameEngine::MyGameEngine(const HINSTANCE& inst_)
 	this->screenState.MultiSample = 1;
 	this->screenState.FullScreenMode = false;
 	this->screenState.BackGroundColor = CreateSolidBrush(RGB(0xFF, 0xFF, 0x00));
-	this->screenState.WindowStyle = MyWS::WindowStyleTable[MyWS::MyWindowStyle::Window];
+	this->screenState.WindowStyle = MyWS::WindowStyleTable[MyWS::Window];
 
 	RECT dtr;
 	if (GetWindowRect(GetDesktopWindow(), &dtr)) {
