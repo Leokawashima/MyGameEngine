@@ -15,6 +15,7 @@
 // 引数になんかついてる...何？が解決するURL
 // 三番目のリンクはMicrosoftのドキュメントで英語だが、
 // 自動翻訳すると元から日本語で書かれていたのかと思うほど分かりやすい説明で書かれている
+/*
 int __stdcall WinMain(
 	_In_ HINSTANCE instance_,
 	_In_opt_ HINSTANCE,
@@ -40,7 +41,7 @@ int __stdcall WinMain(
 		&GE->screenState,				//ウィンドウ描画の構造体
 		&ws,							//ウィンドウを生成する矩形　すぐ上で宣言済
 		show_cmd_);						//どのようにウィンドウを表示するか…らしい　Microsoft公式によると通常最小化最大化のフラグが入っている？っぽい
-	
+
 	if (wnd == nullptr) { return 0; }
 
 	//メッセージループ
@@ -68,8 +69,17 @@ int __stdcall WinMain(
 	//{??}　なんたら～　みたいな行が二行以上出てメモリのアドレス値みたいなのがでたらリーク発生
 	//あくまで確認するためにわざと起こしても良いがそのあとのPCのパフォーマンスが落ちるので推奨はしない
 	delete GE;
-	
+
 	return 0;
+}
+*/
+int __stdcall WinMain(
+	_In_ HINSTANCE instance_,
+	_In_opt_ HINSTANCE,
+	_In_ LPSTR,
+	_In_ int show_cmd_)
+{
+
 }
 
 #pragma endregion WinMain
