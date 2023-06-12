@@ -6,22 +6,8 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="MyGameEngine.cpp">
+    <ClCompile Include="Main.cpp">
       <Filter>MyGameEngine</Filter>
     </ClCompile>
-    <ClCompile Include="WinMain.cpp">
-      <Filter>MyGameEngine</Filter>
-    </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="MyGameEngine.h">
-      <Filter>MyGameEngine</Filter>
-    </ClInclude>
-    <ClInclude Include="WinMain.h">
-      <Filter>MyGameEngine</Filter>
-    </ClInclude>
-    <ClInclude Include="MyWindowPalette.h">
-      <Filter>MyGameEngine</Filter>
-    </ClInclude>
   </ItemGroup>
 </Project>
