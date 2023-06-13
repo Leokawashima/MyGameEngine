@@ -1,5 +1,6 @@
 #pragma once
 #include <windows.h>
+#include <memory>
 
 namespace MyGE
 {
@@ -41,11 +42,11 @@ namespace MyGE
 		};
 		ScreenState screenState;
 
-		MyGameEngine(const HINSTANCE& inst_);
 		~MyGameEngine();
 		void Step(HWND wnd_);
-		bool QuitRequire;
-		RECT WindowDefRect();
+		bool QuitOrder;
+		static MyGameEngine* DefaultInitialize(HINSTANCE instance_);
+		RECT DefaultWindowRect();
 	};
 }
 

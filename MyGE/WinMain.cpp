@@ -24,10 +24,9 @@ int __stdcall WinMain(
 	//宣言だけで中身がないのでnewでインスタンス生成(Unityと同じ)
 	//javaやC#のようなガベージコレクション(自動メモリ制御)がないが疑似機能としてスマートポインタがあるのでそれでもいい
 	//今回はWinMainの最初と最後だけ生成されると決まっているので余分なオーバーヘッドを重むのが嫌なので標準ポインタ
-	GE = new MyGE::MyGameEngine(instance_);
-
+	GE = MyGE::MyGameEngine::DefaultInitialize(instance_);
 	//ウィンドウ生成の矩形設定　MyWindowPalette空間で定義してある
-	RECT ws = GE->WindowDefRect();
+	RECT ws = GE->DefaultWindowRect();
 	//ウィンドウハンドルを生成　(ほぼ)ウィンドウのインスタンスと思っていいはず
 	HWND wnd = MyProgram_CreateWindow(
 		instance_,						//windowsに登録されたインスタンス番号(囚人番号みたいなもん)
@@ -63,7 +62,8 @@ int __stdcall WinMain(
 	//{??}　なんたら～　みたいな行が二行以上出てメモリのアドレス値みたいなのがでたらリーク発生
 	//あくまで確認するためにわざと起こしても良いがそのあとのPCのパフォーマンスが落ちるので推奨はしない
 	delete GE;
-	
+
+	_CrtDumpMemoryLeaks();
 	return 0;
 }
 
@@ -73,25 +73,25 @@ int __stdcall WinMain(
 
 // CreateWindow関数で引数の変数を変更することはまずないが読み取り専用である事を明示している
 HWND MyProgram_CreateWindow(
-	const HINSTANCE inst_,
-	const MyGE::MyGameEngine::WindowState* winState_,
+	const HINSTANCE instance_,
+	const MyGE::MyGameEngine::WindowState* windowState_,
 	const MyGE::MyGameEngine::ScreenState* screenState_,
 	const LPRECT rect_,
 	const int showCmd_)
 {
 	WNDCLASSEX wcex;
 	wcex.cbSize = sizeof(WNDCLASSEX);
-	wcex.style = winState_->Style;
+	wcex.style = windowState_->Style;
 	wcex.lpfnWndProc = (WNDPROC)WndProc;
-	wcex.cbClsExtra = winState_->CbClsExtra;
-	wcex.cbWndExtra = winState_->CbWndExtra;
-	wcex.hInstance = inst_;
-	wcex.hIcon = winState_->HIcon;
-	wcex.hCursor = winState_->HCursor;
+	wcex.cbClsExtra = windowState_->CbClsExtra;
+	wcex.cbWndExtra = windowState_->CbWndExtra;
+	wcex.hInstance = instance_;
+	wcex.hIcon = windowState_->HIcon;
+	wcex.hCursor = windowState_->HCursor;
 	wcex.hbrBackground = screenState_->BackGroundColor;
-	wcex.lpszMenuName = winState_->MenuName;
-	wcex.lpszClassName = winState_->TaskName;
-	wcex.hIconSm = winState_->HIconSm;
+	wcex.lpszMenuName = windowState_->MenuName;
+	wcex.lpszClassName = windowState_->TaskName;
+	wcex.hIconSm = windowState_->HIconSm;
 
 	if (!RegisterClassEx(&wcex))
 	{
@@ -102,14 +102,15 @@ HWND MyProgram_CreateWindow(
 	DWORD dws = GE->screenState.WindowStyle;
 
 	AdjustWindowRectEx(rect_, dws, false, WS_EX_APPWINDOW);
-	HWND wnd = CreateWindowEx(WS_EX_APPWINDOW,
-		winState_->TaskName,
-		winState_->WindowName,
+	HWND wnd = CreateWindowEx(
+		WS_EX_APPWINDOW,
+		windowState_->TaskName,
+		windowState_->WindowName,
 		dws,
 		0, 0,
 		(rect_->right - rect_->left),
 		(rect_->bottom - rect_->top),
-		nullptr, nullptr, inst_, nullptr);
+		nullptr, nullptr, instance_, nullptr);
 
 	if (!wnd)
 	{
@@ -132,50 +133,32 @@ LRESULT CALLBACK WndProc(
 	const WPARAM wParam_,
 	const LPARAM lParam_)
 {
-	static HPEN hPen[2];
 	LRESULT ret = (LRESULT)0;
 	static int width, height;
 
 	switch (msg_) {//メッセージハンドラ
 	case WM_CREATE://ウィンドウ生成されたとき(開始時のみ)
-		hPen[0] = CreatePen(PS_SOLID, 10, 0x0000FF00);
-		hPen[1] = CreatePen(PS_DASH, 1, 0x000000FF);
 		break;
 	case WM_CLOSE://ウィンドウの✖が押されたとき
-		GE->QuitRequire = true;
+		//GE->QuitOrder = true;
+		DestroyWindow(wnd_);
 		break;
 	case WM_DESTROY://ウィンドウ破棄されたとき(終了時のみ)
-		DeleteObject(hPen[0]);
-		DeleteObject(hPen[1]);
 		PostQuitMessage(0);
 		break;
 	case WM_PAINT://ウィンドウを再表示するとき(最小化最大化サイズ変更すべて)
-	{
-		PAINTSTRUCT ps;
-		BeginPaint(wnd_, &ps);
-		HDC hdc = ps.hdc;
-		SelectObject(hdc, hPen[1]);
-		Rectangle(hdc, 0, 0, GE->screenState.WidthDef, GE->screenState.HeightDef);
-		EndPaint(wnd_, &ps);
-	}
-	break;
+		break;
 	case WM_MOUSEMOVE://ウィンドウ上でマウス移動したとき
-	{
-		int mPosX = LOWORD(lParam_);
-		int mPosY = HIWORD(lParam_);
-		HDC hdc = GetDC(wnd_);
-		SelectObject(hdc, hPen[0]);
-		Rectangle(hdc, mPosX, mPosY, mPosX + 30, mPosY + 30);//四角を書く
-		//SetPixel(hdc, x + 15, y + 15, 0x000000FF);//赤い点を書く
-		//SetPixel(hdc, x + 16, y + 16, 0x000000FF);//赤い点を書く
-		//SetPixel(hdc, x + 17, y + 17, 0x000000FF);//赤い点を書く
-		ReleaseDC(wnd_, hdc);
-	}
-	break;
+		break;
 	case WM_KEYDOWN://ウィンドウがアクティブでキー入力を受け付けつけたとき
 		if (wParam_ == VK_ESCAPE)
 		{
-			GE->QuitRequire = true;
+			GE->QuitOrder = true;
+			//DestroyWindow(wnd_);
+		}
+		else if (wParam_ == VK_SPACE)
+		{
+			GE->screenState.FullScreenMode = !GE->screenState.FullScreenMode;
 		}
 	case WM_SIZE:
 		width =  max(min(LOWORD(lParam_), GE->screenState.WidthMax), GE->screenState.WidthMin);

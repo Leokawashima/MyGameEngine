@@ -1,57 +1,20 @@
 #include "MyWindowPalette.h"
+using namespace MyGE;
 using namespace MyWP;
 
 // ゲームエンジンのポインタ(インスタンスを受け渡すとデカいので)
 // スマートポインタでも良かったが正直WinMain内でnewして終了時にdeleteするだけのポインタで
 // 結構な回数アクセスされるのにわざわざオーバーヘッドを増やす必要はない
-MyGE::MyGameEngine* GE;
-
-// エンジンのコンストラクタ(初期化処理)
-MyGE::MyGameEngine::MyGameEngine(const HINSTANCE& inst_)
-{
-	//ウィンドウの設定情報
-	this->windowState.TaskName = "MyGameEngine_ProtoType";
-	this->windowState.WindowName = "MyGameEngine";
-	this->windowState.MenuName = nullptr;
-	this->windowState.Style = (CS_HREDRAW | CS_VREDRAW);
-	this->windowState.CbClsExtra = 0;
-	this->windowState.CbWndExtra = 0;
-	this->windowState.HIcon = LoadIcon(inst_, MyWI::WindowIconTable[MyWI::Application]);
-	this->windowState.HIconSm = LoadIcon(inst_, MyWI::WindowIconTable[MyWI::Application]);
-	this->windowState.HCursor = LoadCursor(nullptr, MyWC::WindowCursorTable[MyWC::Arrow]);
-
-	//ウィンドウの描画情報
-	this->screenState.StartPosX = 0;
-	this->screenState.StartPosY = 0;
-	this->screenState.WidthDef = 960;
-	this->screenState.WidthMin = 480;
-	this->screenState.WidthMax = 1920;
-	this->screenState.HeightDef = 540;
-	this->screenState.HeightMin = 270;
-	this->screenState.HeightMax = 1080;
-	this->screenState.ViewScaleX = 1;
-	this->screenState.ViewScaleY = 1;
-	this->screenState.MultiSample = 1;
-	this->screenState.FullScreenMode = false;
-	this->screenState.BackGroundColor = CreateSolidBrush(RGB(0xFF, 0xFF, 0x00));
-	this->screenState.WindowStyle = MyWS::WindowStyleTable[MyWS::Window];
-
-	RECT dtr;
-	if (GetWindowRect(GetDesktopWindow(), &dtr)) {
-		this->screenState.FullScaleX = int((float)dtr.right / (float)this->screenState.WidthDef);
-		this->screenState.FullScaleY = int((float)dtr.bottom / (float)this->screenState.HeightDef);
-	}
-
-	this->QuitRequire = false;
-}
+MyGameEngine* GE;
 
 // エンジンのデコンストラクタ(廃棄時処理)
-MyGE::MyGameEngine::~MyGameEngine()
+MyGameEngine::~MyGameEngine()
 {
+	//どうやらDeleteObjectしなくてもメモリリークはしないらしい
 	//DeleteObject(this->screenState.BackGroundColor);
 }
 
-void MyGE::MyGameEngine::Step(HWND wnd_)
+void MyGameEngine::Step(HWND wnd_)
 {
 	static int cnt = 0;
 	HDC hdc = GetDC(wnd_);
@@ -61,13 +24,51 @@ void MyGE::MyGameEngine::Step(HWND wnd_)
 	ReleaseDC(wnd_, hdc);
 	cnt++;
 	Sleep(16);
-	if (this->QuitRequire)
-	{
-		DestroyWindow(wnd_);
-	}
 }
 
-RECT MyGE::MyGameEngine::WindowDefRect()
+MyGameEngine* MyGameEngine::DefaultInitialize(const HINSTANCE instance_)
+{
+	auto ge = new MyGameEngine();
+
+	//ウィンドウの設定情報
+	ge->windowState.TaskName = "ASOBI";
+	ge->windowState.WindowName = "ASOBI";
+	ge->windowState.MenuName = nullptr;
+	ge->windowState.Style = (CS_HREDRAW | CS_VREDRAW);
+	ge->windowState.CbClsExtra = 0;
+	ge->windowState.CbWndExtra = 0;
+	ge->windowState.HIcon = LoadIcon(instance_, MyWI::WindowIconTable[MyWI::Application]);
+	ge->windowState.HIconSm = LoadIcon(instance_, MyWI::WindowIconTable[MyWI::Application]);
+	ge->windowState.HCursor = LoadCursor(nullptr, MyWC::WindowCursorTable[MyWC::Arrow]);
+
+	//ウィンドウの描画情報
+	ge->screenState.StartPosX = 0;
+	ge->screenState.StartPosY = 0;
+	ge->screenState.WidthDef = 240;//960
+	ge->screenState.WidthMin = 480;
+	ge->screenState.WidthMax = 1920;
+	ge->screenState.HeightDef = 240;//540
+	ge->screenState.HeightMin = 270;
+	ge->screenState.HeightMax = 1080;
+	ge->screenState.ViewScaleX = 1;
+	ge->screenState.ViewScaleY = 1;
+	ge->screenState.MultiSample = 1;
+	ge->screenState.FullScreenMode = false;
+	ge->screenState.BackGroundColor = CreateSolidBrush(RGB(0xFF, 0xFF, 0x00));
+	ge->screenState.WindowStyle = MyWS::WindowStyleTable[MyWS::Window];
+
+	RECT dtr;
+	if (GetWindowRect(GetDesktopWindow(), &dtr)) {
+		ge->screenState.FullScaleX = int((float)dtr.right / (float)ge->screenState.WidthDef);
+		ge->screenState.FullScaleY = int((float)dtr.bottom / (float)ge->screenState.HeightDef);
+	}
+
+	ge->QuitOrder = false;
+
+	return ge;
+}
+
+RECT MyGameEngine::DefaultWindowRect()
 {
 	return RECT{
 		GE->screenState.StartPosX,
