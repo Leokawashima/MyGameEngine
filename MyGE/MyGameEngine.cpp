@@ -41,6 +41,8 @@ MyGE::MyGameEngine::MyGameEngine(const HINSTANCE& inst_)
 		this->screenState.FullScaleX = int((float)dtr.right / (float)this->screenState.WidthDef);
 		this->screenState.FullScaleY = int((float)dtr.bottom / (float)this->screenState.HeightDef);
 	}
+
+	this->QuitRequire = false;
 }
 
 // エンジンのデコンストラクタ(廃棄時処理)
@@ -59,6 +61,20 @@ void MyGE::MyGameEngine::Step(HWND wnd_)
 	ReleaseDC(wnd_, hdc);
 	cnt++;
 	Sleep(16);
+	if (this->QuitRequire)
+	{
+		DestroyWindow(wnd_);
+	}
+}
+
+RECT MyGE::MyGameEngine::WindowDefRect()
+{
+	return RECT{
+		GE->screenState.StartPosX,
+		GE->screenState.StartPosY,
+		(int)(GE->screenState.WidthDef * GE->screenState.ViewScaleX),
+		(int)(GE->screenState.HeightDef * GE->screenState.ViewScaleY)
+	};
 }
 
 #pragma region Docment

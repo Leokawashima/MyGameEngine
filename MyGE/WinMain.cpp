@@ -26,13 +26,8 @@ int __stdcall WinMain(
 	//今回はWinMainの最初と最後だけ生成されると決まっているので余分なオーバーヘッドを重むのが嫌なので標準ポインタ
 	GE = new MyGE::MyGameEngine(instance_);
 
-	//ウィンドウ生成の矩形設定　MyGameEngine.cppのコンストラクタで設定することを推奨
-	RECT ws = {
-		GE->screenState.StartPosX,
-		GE->screenState.StartPosY,
-		(int)(GE->screenState.WidthDef * GE->screenState.ViewScaleX),
-		(int)(GE->screenState.HeightDef * GE->screenState.ViewScaleY)
-	};
+	//ウィンドウ生成の矩形設定　MyWindowPalette空間で定義してある
+	RECT ws = GE->WindowDefRect();
 	//ウィンドウハンドルを生成　(ほぼ)ウィンドウのインスタンスと思っていいはず
 	HWND wnd = MyProgram_CreateWindow(
 		instance_,						//windowsに登録されたインスタンス番号(囚人番号みたいなもん)
@@ -147,7 +142,7 @@ LRESULT CALLBACK WndProc(
 		hPen[1] = CreatePen(PS_DASH, 1, 0x000000FF);
 		break;
 	case WM_CLOSE://ウィンドウの✖が押されたとき
-		DestroyWindow(wnd_);
+		GE->QuitRequire = true;
 		break;
 	case WM_DESTROY://ウィンドウ破棄されたとき(終了時のみ)
 		DeleteObject(hPen[0]);
@@ -180,11 +175,7 @@ LRESULT CALLBACK WndProc(
 	case WM_KEYDOWN://ウィンドウがアクティブでキー入力を受け付けつけたとき
 		if (wParam_ == VK_ESCAPE)
 		{
-			DestroyWindow(wnd_);
-		}
-		if (wParam_ == 0x57)
-		{
-
+			GE->QuitRequire = true;
 		}
 	case WM_SIZE:
 		width =  max(min(LOWORD(lParam_), GE->screenState.WidthMax), GE->screenState.WidthMin);

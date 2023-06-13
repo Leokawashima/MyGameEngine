@@ -44,6 +44,8 @@ namespace MyGE
 		MyGameEngine(const HINSTANCE& inst_);
 		~MyGameEngine();
 		void Step(HWND wnd_);
+		bool QuitRequire;
+		RECT WindowDefRect();
 	};
 }
 
