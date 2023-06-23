@@ -24,6 +24,10 @@ void MyGameEngine::Step(HWND wnd_)
 	ReleaseDC(wnd_, hdc);
 	cnt++;
 	Sleep(16);
+	if (QuitOrder)
+	{
+		DestroyWindow(wnd_);
+	}
 }
 
 MyGameEngine* MyGameEngine::DefaultInitialize(const HINSTANCE instance_)

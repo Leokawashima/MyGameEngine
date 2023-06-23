@@ -140,25 +140,23 @@ LRESULT CALLBACK WndProc(
 	case WM_CREATE://ウィンドウ生成されたとき(開始時のみ)
 		break;
 	case WM_CLOSE://ウィンドウの✖が押されたとき
-		//GE->QuitOrder = true;
-		DestroyWindow(wnd_);
+		GE->QuitOrder = true;
 		break;
 	case WM_DESTROY://ウィンドウ破棄されたとき(終了時のみ)
 		PostQuitMessage(0);
 		break;
-	case WM_PAINT://ウィンドウを再表示するとき(最小化最大化サイズ変更すべて)
-		break;
+	//case WM_PAINT://ウィンドウを再表示するとき(最小化最大化サイズ変更すべて)
+		//break;
 	case WM_MOUSEMOVE://ウィンドウ上でマウス移動したとき
 		break;
 	case WM_KEYDOWN://ウィンドウがアクティブでキー入力を受け付けつけたとき
 		if (wParam_ == VK_ESCAPE)
 		{
 			GE->QuitOrder = true;
-			//DestroyWindow(wnd_);
 		}
 		else if (wParam_ == VK_SPACE)
 		{
-			GE->screenState.FullScreenMode = !GE->screenState.FullScreenMode;
+			GE->screenState.FullScreenMode = ~GE->screenState.FullScreenMode;
 		}
 	case WM_SIZE:
 		width =  max(min(LOWORD(lParam_), GE->screenState.WidthMax), GE->screenState.WidthMin);
